@@ -6,6 +6,8 @@ import {AuthStack} from '../src/Components/AuthStack';
 import {AuthContext} from '../src/Constants/AuthContext';
 import DrawerNavigator from "../src/Components/DrawerNaviagtor";
 import DetailMovies from "../src/Screen/Movie/DetailMovies";
+import BookTickets from "../src/Components/BookTickets";
+
 const Stack = createNativeStackNavigator();
 
 const RootStack = () => {
@@ -20,6 +22,7 @@ const RootStack = () => {
         >
           <Stack.Screen name="DrawerNavigator" component={DrawerNavigator} />
           <Stack.Screen name="DetailMovies" component={DetailMovies} />
+          <Stack.Screen name="BookTickets" component={BookTickets} />
         </Stack.Navigator>
       ) : (
         <AuthStack />
