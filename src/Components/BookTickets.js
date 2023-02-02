@@ -14,6 +14,7 @@ import { AuthContext } from "../Constants/AuthContext";
 import moment from "moment/moment";
 import { useNavigation } from "@react-navigation/native";
 import HeaderSreen from "./HeaderSreen";
+import useGetBookChair from "../Hook/useGetBookChair";
 
 const BookTickets = ({ route }) => {
   const { isLoading, userInfo } = useContext(AuthContext);
@@ -23,6 +24,8 @@ const BookTickets = ({ route }) => {
   const [selectedChairs, setSelectedChairs] = useState([]);
   const navigation = useNavigation();
   const tai_khoan = userInfo.content.taiKhoan;
+  const { BookChairMovie } = useGetBookChair({ maLichChieu });
+
   useEffect(() => {
     async function getflim() {
       const res = await axios.get(
@@ -34,9 +37,9 @@ const BookTickets = ({ route }) => {
       const result = response?.data?.content;
       const newData = result?.map((l) => {
         if (l.tenGhe > 40) {
-          return { ...l, giaVeVip: gia_vip };
+          return { ...l, giaVeVip: gia_vip, Action: false };
         }
-        return { ...l, giaVeThuong: gia_thuong };
+        return { ...l, giaVeThuong: gia_thuong, Action: false };
       });
       if (newData) setChairs(newData);
     });
@@ -74,6 +77,14 @@ const BookTickets = ({ route }) => {
         console.log(`BookTicks error ${e}`);
       });
   };
+  chairs?.map((c) => {
+    BookChairMovie?.map((b) => {
+      if (b.ten_ghe === c.tenGhe) {
+        return (c.Action = true);
+      }
+    });
+    return c;
+  });
   return (
     <View>
       <HeaderSreen iconLeft onIconLeft={navigation.goBack} title={"Đặt vé"} />
@@ -129,12 +140,15 @@ const BookTickets = ({ route }) => {
               <>
                 <View key={item?.tenGhe} style={{ padding: 2 }}>
                   <TouchableOpacity
+                    disabled={item?.Action}
                     style={{
                       backgroundColor: `${
                         selectedChairs
                           ?.map((i) => i?.tenGhe)
                           ?.includes(item?.tenGhe)
                           ? "red"
+                          : item?.Action
+                          ? "linen"
                           : item?.giaVeVip
                           ? "#002f4f"
                           : "black"
