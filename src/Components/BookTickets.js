@@ -25,7 +25,17 @@ const BookTickets = ({ route }) => {
   const navigation = useNavigation();
   const tai_khoan = userInfo.content.taiKhoan;
   const { BookChairMovie } = useGetBookChair({ maLichChieu });
+  const [counter, setCounter] = useState(120);
 
+  useEffect(() => {
+    counter > 0 && setTimeout(() => setCounter(counter - 1), 1000);
+    if (counter === 0) {
+     Alert.alert("Bạn đã giữ ghế quá lâu!")
+      setTimeout(() => {
+        setCounter(120)
+      }, 3000);
+  }
+  }, [counter]);
   useEffect(() => {
     async function getflim() {
       const res = await axios.get(
@@ -102,6 +112,11 @@ const BookTickets = ({ route }) => {
           <View>
             <Text style={[styles.titleColor, styles.fontSizeColor]}>
               Tổng giá Vé: {sumPrice}
+            </Text>
+          </View>
+          <View>
+          <Text style={[styles.titleColor, styles.fontSizeColor]}>
+              Thời gian giữ vé: {counter}
             </Text>
           </View>
           <View style={styles.BackgroundBookChair}>
