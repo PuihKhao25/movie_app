@@ -18,7 +18,7 @@ const CustomDrawer = (props) => {
     await logout();
   };
   return (
-    <View style={{marginTop:30}}>
+    <View style={{ marginTop: 30 }}>
       <View style={Styles.sectionBg}>
         <DrawerContentScrollView {...props}>
           <DrawerItemList {...props} />
@@ -40,7 +40,7 @@ const DrawerNavigator = () => {
   return (
     <Drawer.Navigator
       screenOptions={{
-        headerShown: true,
+        headerShown: false,
         headerStyle: {
           backgroundColor: "#151C26",
           elevation: 0,
@@ -73,7 +73,7 @@ const styles = StyleSheet.create({
     bottom: 50,
     backgroundColor: "#151C26",
     padding: 20,
-    marginTop:30
+    marginTop: 30,
   },
 });
 

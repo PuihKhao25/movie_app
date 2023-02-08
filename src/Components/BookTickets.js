@@ -72,7 +72,12 @@ const BookTickets = ({ route }) => {
     ?.map((s) => s.giaVeThuong || s.giaVeVip)
     ?.reduce((partialSum, a) => partialSum + a, 0);
 
+    
   const submitBookTicts = async () => {
+    const AlertSuccess = () =>
+    Alert.alert('MOVIE GROUP', 'Đặt vé thành công', [
+      {text: 'OK', onPress: () =>navigation.navigate('Home')},
+    ]);
     const valueSubmit = selectedChairs.map(
       ({ giaVeVip, giaVeThuong, tenGhe, ...v }) => {
         return { ...v, tai_khoan: tai_khoan, ma_lich_chieu: maLichChieu };
@@ -81,7 +86,7 @@ const BookTickets = ({ route }) => {
     await axios
       .post(`${API_URL}/api/QuanLyDatVe/DatVe`, { danhSachVe: valueSubmit })
       .then(({ data }) => {
-        Alert.alert("Đặt vé thành công");
+        AlertSuccess()
       })
       .catch((e) => {
         console.log(`BookTicks error ${e}`);
