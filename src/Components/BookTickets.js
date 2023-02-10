@@ -7,6 +7,7 @@ import {
   ScrollView,
   TouchableOpacity,
   Alert,
+  Image,
 } from "react-native";
 import React, { useEffect, useState, useContext } from "react";
 import Styles from "../Styles";
@@ -15,38 +16,47 @@ import moment from "moment/moment";
 import { useNavigation } from "@react-navigation/native";
 import HeaderSreen from "./HeaderSreen";
 import useGetBookChair from "../Hook/useGetBookChair";
+import { useGetDetailMovieBookTicket } from "../Hook";
 
 const BookTickets = ({ route }) => {
   const { isLoading, userInfo } = useContext(AuthContext);
-  const { maLichChieu, maRap, ngayGioChieu, tenRap, gia_thuong, gia_vip } =
-    route?.params;
+  const {
+    maLichChieu,
+    maRap,
+    logo,
+    ngayGioChieu,
+    tenRap,
+    gia_thuong,
+    gia_vip,
+  } = route?.params;
+
   const [chairs, setChairs] = useState([]);
   const [selectedChairs, setSelectedChairs] = useState([]);
   const navigation = useNavigation();
   const tai_khoan = userInfo.content.taiKhoan;
   const { BookChairMovie } = useGetBookChair({ maLichChieu });
   const [counter, setCounter] = useState(120);
-
+  const { movieDetail } = useGetDetailMovieBookTicket({ maLichChieu });
   useEffect(() => {
     counter > 0 && setTimeout(() => setCounter(counter - 1), 1000);
     if (counter === 0) {
-     Alert.alert("Bạn đã giữ ghế quá lâu!")
+      Alert.alert("Bạn đã giữ ghế quá lâu!");
       setTimeout(() => {
-        setCounter(120)
+        setCounter(120);
       }, 3000);
-  }
+    }
   }, [counter]);
   useEffect(() => {
-    async function getflim() {
+    async function getChairs() {
       const res = await axios.get(
         API_URL + `/api/QuanLyRap/layGheTheoRap?maRap=${maRap}`
       );
       return res;
     }
-    getflim().then((response) => {
+    getChairs().then((response) => {
       const result = response?.data?.content;
       const newData = result?.map((l) => {
-        if (l.tenGhe > 40) {
+        if (l.tenGhe > 70) {
           return { ...l, giaVeVip: gia_vip, Action: false };
         }
         return { ...l, giaVeThuong: gia_thuong, Action: false };
@@ -72,12 +82,11 @@ const BookTickets = ({ route }) => {
     ?.map((s) => s.giaVeThuong || s.giaVeVip)
     ?.reduce((partialSum, a) => partialSum + a, 0);
 
-    
   const submitBookTicts = async () => {
     const AlertSuccess = () =>
-    Alert.alert('MOVIE GROUP', 'Đặt vé thành công', [
-      {text: 'OK', onPress: () =>navigation.navigate('Home')},
-    ]);
+      Alert.alert("MOVIE GROUP", "Đặt vé thành công", [
+        { text: "OK", onPress: () => navigation.navigate("Home") },
+      ]);
     const valueSubmit = selectedChairs.map(
       ({ giaVeVip, giaVeThuong, tenGhe, ...v }) => {
         return { ...v, tai_khoan: tai_khoan, ma_lich_chieu: maLichChieu };
@@ -86,7 +95,7 @@ const BookTickets = ({ route }) => {
     await axios
       .post(`${API_URL}/api/QuanLyDatVe/DatVe`, { danhSachVe: valueSubmit })
       .then(({ data }) => {
-        AlertSuccess()
+        AlertSuccess();
       })
       .catch((e) => {
         console.log(`BookTicks error ${e}`);
@@ -106,23 +115,93 @@ const BookTickets = ({ route }) => {
 
       <ScrollView horizontal={false} style={Styles.sectionBg}>
         <View style={styles.container}>
-          <View>
-            <Text style={[styles.titleColor, styles.fontSizeColor]}>
-              Rạp: {tenRap}
-            </Text>
-            <Text style={[styles.titleColor, styles.fontSizeColor]}>
-              Suất: {moment(ngayGioChieu).format("hh:mm")}
-            </Text>
+          <View
+            style={{
+              flex: 1,
+              height: 75,
+              justifyContent: "space-around",
+              backgroundColor: "#0a0f13",
+              padding: 13,
+              borderRadius: 10,
+            }}
+          >
+            <View style={styles.containnerLogo}>
+              <Image
+                source={{ uri: movieDetail?.hinh_anh }}
+                style={styles.logo}
+              />
+              <View>
+                <Text style={styles.nameRap}>{movieDetail?.ten_phim}</Text>
+                <Text style={styles.nameRap}>
+                  Suất: {moment(ngayGioChieu).format("hh:mm")}
+                </Text>
+              </View>
+            </View>
           </View>
-          <View>
-            <Text style={[styles.titleColor, styles.fontSizeColor]}>
-              Tổng giá Vé: {sumPrice}
-            </Text>
+          <View
+            style={{
+              flex: 1,
+              height: 75,
+              justifyContent: "space-around",
+              backgroundColor: "#0a0f13",
+              borderRadius: 10,
+              padding: 13,
+              marginTop: 5,
+            }}
+          >
+            <View style={styles.containnerLogo}>
+              <Image source={{ uri: logo }} style={styles.logo} />
+              <Text style={styles.nameRap}>{tenRap}</Text>
+            </View>
           </View>
-          <View>
-          <Text style={[styles.titleColor, styles.fontSizeColor]}>
-              Thời gian giữ vé: {counter}
-            </Text>
+          <View
+            style={{
+              flex: 1,
+              height: 75,
+              backgroundColor: "#0a0f13",
+              flexDirection: "row",
+              justifyContent: "center",
+              alignItems: "center",
+              borderRadius: 10,
+              marginTop: 5,
+            }}
+          >
+            <View
+              style={{
+                height: 50,
+                padding: 3,
+                width: 175,
+              }}
+            >
+              <View>
+                <Text style={{ fontSize: 15, color: "white" }}>
+                  Rap {maRap} - Ghế đang đặt :
+                </Text>
+              </View>
+              <View style={{ flex: 1, flexDirection: "row" }}>
+                <Text style={{ fontSize: 15, color: "white" }}>
+                  Tổng tiền :
+                </Text>
+                <Text style={{ fontSize: 15, color: "#5cd4e4", marginLeft: 3 }}>
+                  {sumPrice} VND
+                </Text>
+              </View>
+            </View>
+            <View
+              style={{ backgroundColor: "white", height: 50, width: 1 }}
+            ></View>
+            <View style={{ height: 50, padding: 5, width: 170 }}>
+              <Text
+                style={{ textAlign: "center", fontSize: 17, color: "white" }}
+              >
+                Thời gian giữ Ghế:
+              </Text>
+              <Text
+                style={{ textAlign: "center", fontSize: 17, color: "#5cd4e4" }}
+              >
+                {counter} s
+              </Text>
+            </View>
           </View>
           <View style={styles.BackgroundBookChair}>
             <View style={styles.row}>
@@ -168,10 +247,10 @@ const BookTickets = ({ route }) => {
                           ?.includes(item?.tenGhe)
                           ? "red"
                           : item?.Action
-                          ? "linen"
+                          ? "#6c757d"
                           : item?.giaVeVip
-                          ? "#002f4f"
-                          : "black"
+                          ? "#ffc107"
+                          : "#007bff"
                       }`,
                       width: 30,
                       height: 30,
@@ -204,7 +283,6 @@ export default BookTickets;
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "blue",
     padding: 15,
   },
   row: {
@@ -254,15 +332,30 @@ const styles = StyleSheet.create({
     marginLeft: 5,
   },
   backgroundChairVip: {
-    backgroundColor: "red",
+    backgroundColor: "#ffc107",
   },
   backgroundChairNormol: {
-    backgroundColor: "yellow",
+    backgroundColor: "#007bff",
   },
   backgroundChairSelecteds: {
-    backgroundColor: "pink",
+    backgroundColor: "#6c757d",
   },
   fontSizeColor: {
     fontSize: 17,
+  },
+  logo: {
+    height: 50,
+    width: 50,
+    borderRadius: 20,
+  },
+  containnerLogo: {
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  nameRap: {
+    fontSize: 15,
+    marginLeft: 10,
+    color: "white",
   },
 });
