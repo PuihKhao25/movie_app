@@ -7,6 +7,7 @@ import {
 } from "@react-navigation/drawer";
 import Styles from "../Styles";
 import Home from "../Screen/Home";
+import Profile from "../Screen/Profile/Profile";
 import { AuthContext } from "../Constants/AuthContext";
 import Icon from "react-native-vector-icons/Ionicons";
 
@@ -58,6 +59,15 @@ const DrawerNavigator = () => {
         options={{
           drawerIcon: ({ focused, size }) => (
             <Icon name="home" color={"white"} size={size} />
+          ),
+        }}
+      />
+      <Drawer.Screen
+        component={Profile}
+        name="Profile"
+        options={{
+          drawerIcon: ({ focused, size }) => (
+            <Icon name="people" color={"white"} size={size} />
           ),
         }}
       />
