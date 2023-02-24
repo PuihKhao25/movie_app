@@ -57,9 +57,14 @@ const BookTickets = ({ route }) => {
       const result = response?.data?.content;
       const newData = result?.map((l) => {
         if (l.tenGhe > 70) {
-          return { ...l, giaVeVip: gia_vip, Action: false };
+          return { ...l, gia_ve: gia_vip, giaVeVip: gia_vip, Action: false };
         }
-        return { ...l, giaVeThuong: gia_thuong, Action: false };
+        return {
+          ...l,
+          gia_ve: gia_thuong,
+          giaVeThuong: gia_thuong,
+          Action: false,
+        };
       });
       if (newData) setChairs(newData);
     });
@@ -87,11 +92,9 @@ const BookTickets = ({ route }) => {
       Alert.alert("MOVIE GROUP", "Đặt vé thành công", [
         { text: "OK", onPress: () => navigation.navigate("Home") },
       ]);
-    const valueSubmit = selectedChairs.map(
-      ({ giaVeVip, giaVeThuong, tenGhe, ...v }) => {
-        return { ...v, tai_khoan: tai_khoan, ma_lich_chieu: maLichChieu };
-      }
-    );
+    const valueSubmit = selectedChairs.map(({ giaVeVip,giaVeThuong,tenGhe, ...v }) => {
+      return { ...v, tai_khoan: tai_khoan, ma_lich_chieu: maLichChieu };
+    });
     await axios
       .post(`${API_URL}/api/QuanLyDatVe/DatVe`, { danhSachVe: valueSubmit })
       .then(({ data }) => {

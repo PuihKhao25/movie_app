@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import BtnLogin from '../../Components/BtnLogin';
 import Field from '../../Constants/Field';
-
+import {AuthContext} from '../../Constants/AuthContext';
 // import Spinner from 'react-native-loading-spinner-overlay';
 
 const Signup = ({navigation}) => {
@@ -17,6 +17,7 @@ const Signup = ({navigation}) => {
   const [email, setEmail] = useState('');
   const [so_dt, setSo_dt] = useState('');
   const [mat_khau, setMat_khau] = useState('');
+  const {isLoading, Register} = useContext(AuthContext);
   return (
     <View style={styles.container}>
       {/* <Spinner visible={isLoading} /> */}

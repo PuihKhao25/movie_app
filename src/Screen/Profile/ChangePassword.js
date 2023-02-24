@@ -2,7 +2,7 @@ import React, { useContext, useState } from "react";
 import { View, Text, TouchableOpacity, Image, StyleSheet } from "react-native";
 import Field from "../../Constants/Field";
 import { AuthContext } from "../../Constants/AuthContext";
-const Login = ({ navigation }) => {
+const ChangePassword = ({ navigation }) => {
   const [email, setEmail] = useState("khaoba@gmail.com");
   const [matKhau, setMat_khau] = useState("654321");
   const { isLoading, login } = useContext(AuthContext);
@@ -16,14 +16,7 @@ const Login = ({ navigation }) => {
           />
         </View>
         <View style={styles.containerLogin}>
-          <Text style={styles.loginNumber}>Đăng Nhập Thành Viên</Text>
-          <Field
-            style={styles.EnterField}
-            placeholder="Nhập email"
-            keyboardType={"email"}
-            value={email}
-            onChangeText={(text) => setEmail(text)}
-          />
+          <Text style={styles.loginNumber}>Quên Mật Khẩu</Text>
           <Field
             style={styles.EnterField}
             placeholder="Nhập mật Khẩu"
@@ -33,22 +26,22 @@ const Login = ({ navigation }) => {
           />
           <TouchableOpacity
             style={styles.forgetPass}
-            onPress={() => navigation.navigate("ForgotPassword")}
+            onPress={() => navigation.navigate("Login")}
           >
-            <Text style={styles.colorForgetPass}>Quên mật Khẩu ?</Text>
+            <Text style={styles.colorForgetPass}>Đăng nhập</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.buttonLogin}
-            onPress={() => {
-              login(email, matKhau);
-            }}
+            onPress={() => navigation.navigate("Login")}
+            // onPress={() => {
+            //   login(email, matKhau);
+            // }}
           >
-            <Text style={styles.colorTextLogin}>Đăng Nhập</Text>
+            <Text style={styles.colorTextLogin}>Tiếp tục</Text>
           </TouchableOpacity>
           <View style={styles.notAccount}>
-            <Text style={styles.titleNotAccount}>Bạn chưa có tài khoản?</Text>
-            <TouchableOpacity onPress={() => navigation.navigate("Register")}>
-              <Text style={styles.titleRegisterAccount}>Đăng Ký Tài Khoản</Text>
+            <TouchableOpacity onPress={() => navigation.navigate("Login")}>
+              <Text style={styles.titleRegisterAccount}>Trở lại</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -133,4 +126,6 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Login;
+export default ChangePassword;
+
+

@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -7,47 +7,47 @@ import {
   Button,
   TouchableOpacity,
   StyleSheet,
-} from 'react-native';
-import Styles from '../../Styles';
-import YoutubePlayer from 'react-native-youtube-iframe';
-import {useNavigation} from '@react-navigation/native';
-import moment from 'moment/moment';
-import HeaderSreen from '../../Components/HeaderSreen';
-import { useGetDetailMovie } from '../../Hook';
+} from "react-native";
+import Styles from "../../Styles";
+import YoutubePlayer from "react-native-youtube-iframe";
+import { useNavigation } from "@react-navigation/native";
+import moment from "moment/moment";
+import HeaderSreen from "../../Components/HeaderSreen";
+import { useGetDetailMovie } from "../../Hook";
 
-const DetailMovies = ({route}) => {
-
+const DetailMovies = ({ route }) => {
   const [showTime, setShowTime] = useState(false);
   const navigation = useNavigation();
-  const {maPhim, tenPhim, trailer, moTa, ngay_khoi_chieu} = route?.params?.item;
-  const {detailMovie} = useGetDetailMovie({maPhim});
+  const { maPhim, tenPhim, trailer, moTa, ngay_khoi_chieu }=route?.params?.item;
+  const { detailMovie } = useGetDetailMovie({ maPhim });
+  const idtrailer = trailer?.slice(32, trailer.legnth);
 
   return (
     <>
       <HeaderSreen
         iconLeft
         onIconLeft={navigation.goBack}
-        title={'Chi tiết phim'}
+        title={"Chi tiết phim"}
       />
       <ScrollView style={Styles.sectionBg}>
         <View>
-          <YoutubePlayer height={300} play={true} videoId={trailer} />
+          <YoutubePlayer height={300} play={true} videoId={idtrailer} />
           <View style={styles.padding}>
             <Text style={Styles.detailsMovieTitle}>Tên Phim : {tenPhim}</Text>
             <View>
               <Text style={styles.time}>
-                Ngày khởi chiếu: {moment(ngay_khoi_chieu).format('YYYY-MM-DD ')}
+                Ngày khởi chiếu: {moment(ngay_khoi_chieu).format("YYYY-MM-DD ")}
               </Text>
             </View>
             <View style={styles.padding}>
-              {detailMovie?.map(item => {
+              {detailMovie?.map((item) => {
                 return (
                   <>
                     <View key={item?.maRap}>
                       <TouchableOpacity onPress={() => setShowTime(!showTime)}>
                         <View style={styles.containnerLogo}>
                           <Image
-                            source={{uri: item?.logo}}
+                            source={{ uri: item?.logo }}
                             style={styles.logo}
                           />
                           <Text style={styles.nameRap}>{item?.tenRap}</Text>
@@ -56,11 +56,12 @@ const DetailMovies = ({route}) => {
                       {showTime && (
                         <TouchableOpacity
                           onPress={() =>
-                            navigation.navigate('BookTickets', item)
+                            navigation.navigate("BookTickets", item)
                           }
-                          style={styles.chooseTime}>
+                          style={styles.chooseTime}
+                        >
                           <Text style={styles.centerTime}>
-                            {moment(item?.ngayGioChieu).format('hh:mm')}
+                            {moment(item?.ngayGioChieu).format("hh:mm")}
                           </Text>
                         </TouchableOpacity>
                       )}
@@ -85,14 +86,14 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   time: {
-    color: 'white',
+    color: "white",
     marginLeft: 35,
     fontSize: 20,
   },
   containnerLogo: {
     flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     marginTop: 15,
   },
   logo: {
@@ -106,21 +107,21 @@ const styles = StyleSheet.create({
   },
   chooseTime: {
     flex: 1,
-    flexWrap: 'wrap',
-    backgroundColor: 'hsla(0,0%,96%,.6)',
-    justifyContent: 'center',
+    flexWrap: "wrap",
+    backgroundColor: "hsla(0,0%,96%,.6)",
+    justifyContent: "center",
     width: 70,
     height: 50,
     borderRadius: 10,
     marginTop: 10,
   },
   centerTime: {
-    textAlign: 'center',
+    textAlign: "center",
     width: 70,
   },
   content: {
     marginTop: 10,
-    color: 'white',
+    color: "white",
     fontSize: 20,
   },
 });

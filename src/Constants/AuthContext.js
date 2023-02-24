@@ -11,11 +11,11 @@ export const AuthProvider = ({children}) => {
   const [isLoading, setIsLoading] = useState(false);
   const [splashLoading, setSplashLoading] = useState(false);
   const [profile, setProfile] = useState('');
-  const login = (hoTen, matKhau) => {
+  const login = (email, matKhau) => {
     setIsLoading(true);
     axios
       .post(`${API_URL}/api/QuanLyNguoiDung/DangNhap`, {
-        hoTen,
+        email,
         matKhau,
       })
       .then(res => {

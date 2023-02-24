@@ -8,6 +8,7 @@ import {
 import Styles from "../Styles";
 import Home from "../Screen/Home";
 import Profile from "../Screen/Profile/Profile";
+import HistoryProfile from "../Screen/Profile/HistoryProfile";
 import { AuthContext } from "../Constants/AuthContext";
 import Icon from "react-native-vector-icons/Ionicons";
 
@@ -65,6 +66,15 @@ const DrawerNavigator = () => {
       <Drawer.Screen
         component={Profile}
         name="Profile"
+        options={{
+          drawerIcon: ({ focused, size }) => (
+            <Icon name="people" color={"white"} size={size} />
+          ),
+        }}
+      />
+      <Drawer.Screen
+        component={HistoryProfile}
+        name="History"
         options={{
           drawerIcon: ({ focused, size }) => (
             <Icon name="people" color={"white"} size={size} />
